@@ -49,12 +49,14 @@ class QueuesadillaShell extends Shell
      */
     public function getWorker($engine, $logger)
     {
+        $interval = $this->params['interval'];
         $worker = $this->params['worker'];
         $WorkerClass = "josegonzalez\\Queuesadilla\\Worker\\" . $worker . "Worker";
 
         return new $WorkerClass($engine, $logger, [
             'queue' => $engine->config('queue'),
-            'maxRuntime' => $engine->config('maxRuntime')
+            'maxRuntime' => $engine->config('maxRuntime'),
+            'interval' => $interval
         ]);
     }
 
@@ -70,6 +72,11 @@ class QueuesadillaShell extends Shell
             'default' => 'default',
             'help' => 'Name of a queue config to use',
             'short' => 'c',
+        ]);
+        $parser->addOption('interval', [
+            'default' => 1,
+            'help' => 'Interval looking for jobs',
+            'short' => 'i',
         ]);
         $parser->addOption('queue', [
             'help' => 'Name of queue to override from loaded config',
